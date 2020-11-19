@@ -4,11 +4,11 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+		<title>Web Components</title>
 
 		<link rel="stylesheet" href="dist/reset.css">
 		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/black.css" id="theme">
+		<link rel="stylesheet" href="dist/theme/night.css" id="theme">
 
 		<!-- Theme used for syntax highlighted code -->
 		<link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
@@ -16,8 +16,638 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+				<section>
+                    <h2>Web Components</h2>
+                    <h3>Standards, Reifegrad und Einsatzmöglichkeiten</h3>
+                </section>
+                <section>
+                    <h2>Vorstellung Dozent</h2>
+                    <ul> 
+                        <li class="fragment">Jonas Ulrich</li>
+                        <li class="fragment">Entwicklungsleiter bei der<br><a href="https://ruhmesmeile.com">ruhmesmeile GmbH</a> seit 2008</li>
+                        <li class="fragment">Konzeption und Umsetzung von Webprojekten</li>
+                        <li class="fragment">Schwerpunkt auf Interfaces und Frontends</li>
+                        <li class="fragment"><a href="https://github.com/julrich">https://github.com/julrich</a>
+                    </ul>
+                </section>
+				<section>
+                    <h2>Vorstellung Teilnehmer</h2>
+                    <ul>
+                        <li class="fragment">Welche Vorerfahrungen habe ich?</li>
+                        <li class="fragment">In welchem Kontext habe ich in der täglichen Arbeit Kontakt zu Webentwicklungs-Themen?</li>
+                        <li class="fragment">Was erwarte ich mir von diesem Seminar?</li>
+                    </ul>
+                </section>
+				<section>
+                    <h2>Thema</h2>
+
+                    <p><span class="fragment">Web Components</span><span class="fragment">: Woher stammen sie? <span class="fragment">Welches Problem wird gelöst?</span><span class="fragment"> Wie sieht es mit der Unterstützung aus?</span></p>
+                </section>
+                <section>
+                    <h2>Agenda</h2>
+
+                    <ol>
+                        <li class="fragment">Einführung / Vorstellung</li>
+                        <li class="fragment">Durchgehen der 3 Hauptbestandteile:
+                            <ul>
+                                <li class="fragment">Custom Elements</li>
+                                <li class="fragment">Shadow DOM</li>
+                                <li class="fragment">Templates / Slots</li>
+                            </ul>
+                        </li>
+                        <li class="fragment">Mittags-Pause</li>
+                        <li class="fragment">Live-Coding in Gruppen</li>
+                        <li class="fragment">Abschliessender Austausch und Fragerunde</li>
+                    </ol>
+                </section>
+                <section>
+    			    <section>
+                        <h2>Was sind Web Components?</h2>
+
+                        <p class="fragment">Überbegriff für mehrere, neue Browser-Features:</p>
+                        <ul>
+                            <li class="fragment">Custom Elements <small class="fragment">Teil des HTML Living Standard</small></li>
+                            <li class="fragment">Shadow DOM <small class="fragment">Teil der DOM Spec, einem Living Standard</small></li>
+                            <li class="fragment">Templates / Slots <small class="fragment">Teil des HTML Living Standard</small></li>
+                            <li class="fragment">(HTML Imports) <small class="fragment">Working Draft</small></li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>Woher "stammen" sie?</h3>
+
+                        <ul>
+                            <li class="fragment">w3 Standards vs. WCAG</li>
+                            <li class="fragment">
+                                <p>HTML5?</p>
+                                <blockquote cite="https://html.spec.whatwg.org/multipage/introduction.html#is-this-html5?" class="fragment small">
+                                    In short: Yes.<br>
+                                    In more length: the term "HTML5" is widely used as a buzzword to refer to modern web technologies, many of which (though by no means all) are developed at the WHATWG. This document is one such; others are available from the WHATWG Standards overview.<br>
+                                    <a class="small" href="https://html.spec.whatwg.org/multipage/introduction.html#is-this-html4?">https://html.spec.whatwg.org/multipage/introduction.html#is-this-html5?</a>
+                                </blockquote>
+                            </li>
+                            <li class="fragment">Was ist die WCAG?</li>
+                            <li class="fragment">Von 2004 bis zum Memorandum</li>
+                        </ul>
+                    </section>
+                    <section data-background-color="aquamarine" data-background-iframe="https://www.w3.org/2019/04/WHATWG-W3C-MOU.html" data-background-interactive></section>
+                </section>
+                <section>
+                    <h2>Die Web Component-Basics im Detail</h2>
+                </section>
+				<section>
+                    <section>
+                        <h2>Custom Elements</h2>
+
+                        <p class="fragment">Eigene HTML-Elemente / -Tags definieren und verwenden</p>
+                        <p class="fragment">z.B. <span class="inlinecode">&lt;word-count&gt;</span></p>
+                    </section>
+                    <section data-background-color="aquamarine" data-background-iframe="https://html.spec.whatwg.org/multipage/custom-elements.html#custom-elements" data-background-interactive></section>
+                    <section>
+                        <h4>Custom Elements - Definieren</h4>
+
+                        <p class="fragment">Ein eigenes Element definieren über die <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry/define">CustomElementRegistry</a>:</p>
+                        <pre class="fragment"><code data-trim data-noescape>
+                            customElements.define('word-count', WordCount, { extends: 'p' });
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h4>Custom Elements - Implementieren</h4>
+
+                        <p class="fragment">JavaScript-Klasse als Basis der Komponente:</p>
+                        <pre class="fragment"><code data-trim data-noescape>
+                            class WordCount extends HTMLParagraphElement {
+                                constructor() {
+                                    // Always call super first in constructor
+                                    super();
+
+                                    // Element functionality written in here
+
+                                    ...
+                                }
+                            }
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h4>2 Arten von Custom Elements</h4>
+
+                        <ol>
+                            <li class="fragment">Autonomous custom elements</li>
+                            <li class="fragment">Customized built-in elements</li>
+                        </ol>
+                    </section>
+                    <section>
+                        <h4>Autonomous custom elements</h4>
+
+                        <ul>
+                            <li class="fragment">Alleinstehend</li>
+                            <li class="fragment">Können direkt im Code verwendet werden, im Markup:<br>
+                                <pre class="fragment"><code data-trim>
+                                    <popup-info></popup-info>
+                                </code></pre>
+                            </li>
+                            <li class="fragment">oder im JavaScript:<br>
+                                <pre class="fragment"><code data-trim>
+                                    document.createElement("popup-info")
+                                </code></pre>
+                            </li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h4>Customized built-in elements</h4>
+
+                        <ul>
+                            <li class="fragment">Erben von bestehenden Basis-Elementen</li>
+                            <li class="fragment">Werden über das erweiterte Basis-Element verwendet, im Markup:<br>
+                                <pre class="fragment"><code data-trim>
+                                    <p is="word-count"></p>
+                                </code></pre>
+                            </li>
+                            <li class="fragment">oder im JavaScript:<br>
+                                <pre class="fragment"><code data-trim>
+                                    document.createElement("p", { is: "word-count" })
+                                </code></pre>
+                            </li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h4>Demo: Autonomous custom elements</h4>
+
+                        <iframe style="width: 50%; height: 300px; background-color: white;" data-src="https://mdn.github.io/web-components-examples/popup-info-box-web-component/" data-preload></iframe>
+                    </section>
+                    <section data-external="code/custom-elements-01-autonomous.html"></section>
+                    <section>
+                        <h4>Beispiel PopUp Info: Einbindung</h4>
+
+                        <pre><code class="small" data-trim>
+                            <popup-info img="img/alt.png" data-text="Your card validation code (CVC) is an extra 
+                                security feature — it is the last 3 or 4
+                                numbers on the back of your card.">
+                            </popup-info>
+                        </code></pre>    
+                    </section>
+                    <section>
+                        <h4>Inline Styles vs. externe CSS-Dateien</h4>
+
+                        <pre><code class="small" data-trim>
+                            // Apply external styles to the shadow dom
+                            const linkElem = document.createElement('link');
+                            linkElem.setAttribute('rel', 'stylesheet');
+                            linkElem.setAttribute('href', 'style.css');
+
+                            // Attach the created element to the shadow dom
+                            shadow.appendChild(linkElem);
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h4>Demo: Customized built-in elements</h4>
+
+                        <iframe style="width: 80%; height: 300px; background-color: white;" data-src="https://mdn.github.io/web-components-examples/expanding-list-web-component/" data-preload></iframe>
+                    </section>      
+                    <section data-external="code/custom-elements-02-built-in-01.html"></section>
+                    <section data-external="code/custom-elements-03-built-in-02.html"></section>
+                    <section>
+                        <h4>Lifecycle Callbacks</h4>
+
+                        <p>In Komponenten können eine Reihe an Callbacks implementiert werden, um auf verschiedene Events zu reagieren:</p>
+                        <ul>
+                            <li class="fragment"><span class="inlinecode">connectedCallback</span></li>
+                            <li class="fragment"><span class="inlinecode">disconnectedCallback</span></li>
+                            <li class="fragment"><span class="inlinecode">adoptedCallback</span></li>
+                            <li class="fragment"><span class="inlinecode">attributeChangedCallback</span></li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h4>connectedCallback</h4>
+
+                        <ul>
+                            <li class="fragment">Wird aufgerufen, wenn ein Element in den DOM eingehängt wird</li>
+                            <li class="fragment">Wird auch jedes mal aufgerufen, wenn ein Element im DOM verschoben wird</li>
+                            <li class="fragment">Kann geworfen werden, bevor kompletter DOM geladen ist</li>
+                            <li class="fragment">Im Hook <span class="inlinecode">Node.isConnected</span> benutzen um sicher zu gehen</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h4>disconnectedCallback</h4>
+
+                        <ul>
+                            <li class="fragment">Wird aufgerufen, wenn ein Element aus dem DOM ausgehängt wird</li>
+                        </ul>
+
+                        <h4 style="margin-top: 40px;" class="fragment">adoptedCallback</h4>
+
+                        <ul>
+                            <li class="fragment">Wird aufgerufen, wenn ein Element in ein anderes Dokument verschoben wurde</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h4>attributeChangedCallback</h4>
+
+                        <ul>
+                            <li class="fragment">Wird aufgerufen, wenn ein Attribut:</li>
+                            <ul>
+                                <li class="fragment">hinzugefügt,</li>
+                                <li class="fragment">entfernt, oder</li>
+                                <li class="fragment">verändert wird</li>
+                            </ul>
+                            <li class="fragment">Welche Attribute beobachtet werden, wird über eine statische Methode <span class="inlinecode">observedAttributes</span> gesteuert</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h4>Demo: Lifecycle Callbacks</h4>
+
+                        <iframe style="width: 80%; height: 300px; background-color: white;" data-src="https://mdn.github.io/web-components-examples/life-cycle-callbacks/" data-preload></iframe>
+                    </section>
+                    <section data-external="code/custom-elements-04-lifecycle-hooks-01.html"></section>
+                    <section data-external="code/custom-elements-05-lifecycle-hooks-02.html"></section>
+                    <section data-auto-animate>
+                        <h4>Wechselwirkungen mit Polyfills</h4>
+
+                        <p class="fragment small">Je nach Einsatzort kann unerwartetes Verhalten auftreten, wenn zur Kompatibilität Polyfills eingebunden werden:</p>
+                        <p class="fragment">Konstruktor benötigt?</p>
+                        <pre class="fragment"><code class="small" data-trim>
+                            class CustomElement extends HTMLElement {
+                                constructor(...args) {
+                                    const self = super(...args);
+                                    // self functionality written in here
+                                    // self.addEventListener(...)
+                                    // return the right context
+                                    return self;
+                                }
+                            }
+                        </code></pre>
+                    </section>
+                    <section data-auto-animate>
+                        <h4>Wechselwirkungen mit Polyfills</h4>
+
+                        <p class="small">Je nach Einsatzort kann unerwartetes Verhalten auftreten, wenn zur Kompatibilität Polyfills eingebunden werden:</p>
+                        <p>Kein Konstruktor benötigt!</p>
+                        <pre><code class="small" data-trim>
+                            constructor(...args) { return super(...args); }
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h4>Browser-Kompatibilität</h4>
+
+                        <p class="fragment">Custom elements sind in den folgenden Browsern (nativ) supported:</p>
+                        <ul class="fragment">
+                            <li>Firefox</li>
+                            <li>Chrome</li>
+                            <li>Edge (76)</li>
+                        </ul>
+                        <p class="fragment">Opera und Safari unterstützen bisher lediglich Autonomous custom elements</p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Shadow DOM</h2>
+
+                        <p class="fragment">Verhalten, Design und Layout kapseln</p>
+                        <p class="fragment">... und optional isolieren</p>
+                    </section>
+                    <section data-background-color="aquamarine" data-background-iframe="https://dom.spec.whatwg.org/#shadow-trees" data-background-interactive></section>
+                    <section data-auto-animate>
+                        <h4>Erweiterung des bekannten DOM</h4>
+
+                        <p class="fragment">"Normaler" DOM:</p>
+                        <pre class="fragment"><code data-trim>
+                        &lt;!DOCTYPE html&gt;
+                            &lt;html&gt;
+                            <head>
+                                <meta charset="utf-8">
+                                <title>Simple DOM example</title>
+                            </head>
+                            <body>
+                                <section>
+                                    <img src="dinosaur.png" alt="A red Tyrannosaurus Rex: A two legged dinosaur standing upright like a human, with small arms, and a large head with lots of sharp teeth.">
+                                    <p>Here we will add a link to the <a href="https://www.mozilla.org/">Mozilla homepage</a></p>
+                                </section>
+                            &lt;/body&gt;
+                        &lt;/html&gt;
+                        </code></pre>
+                    </section>
+                    <section data-auto-animate>
+                        <h4>Erweiterung des bekannten DOM</h4>
+
+                        <p>"Normaler" DOM:</p>
+                        <img src="images/dom-screenshot.png">
+                    </section>
+                    <section>
+                        <h4>Shadow DOM als Erweiterung</h4>
+
+                        <p class="fragment small">Der Shadow DOM erlaubt es an Elemente im regulären DOM zusätzliche, versteckte DOMs anzuhängen.</p>
+                        <img class="fragment" style="background: white;" src="images/shadow-dom.png"/>
+                    </section>
+                    <section>
+                        <h4>Vokabular</h4>
+
+                        <p class="fragment">Folgende Begrifflichkeiten werden dabei verwendet:</p>
+                        <ul>
+                            <li class="fragment">Shadow host<br><small class="fragment">Node im regulären DOM, an den der Shadow DOM angehängt wurde</small></li>
+                            <li class="fragment">Shadow tree<br><small class="fragment">Der DOM innerhalb des Shadow DOM</small></li>
+                            <li class="fragment">Shadow boundary<br><small class="fragment">Grenze zwischen regulärem DOM und Shadow DOM</small></li>
+                            <li class="fragment">Shadow root<br><small class="fragment">Root Node des Shadow DOM</small></li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h4>Verhalten des Shadow DOM</h4>
+
+                        <p class="fragment">Nodes im Shadow DOM können auf die exakt gleiche Weise bearbeitet werden, wie normale Nodes:</p>
+                        <ul>
+                            <li class="fragment">Hinzufügen / einhängen und schachteln</li>
+                            <li class="fragment">Attribute setzen</li>
+                            <li class="fragment">(Isoliertes) Styling einzelner Nodes über:
+                                <ul>
+                                    <li class="fragment"><span class="inlinecode">&lt;style&gt;</span></li>
+                                    <li class="fragment"><span class="inlinecode">element.style.foo</span></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h4>Historie</h4>
+
+                        <p class="fragment">Der Shadow DOM ist nichts neues. Exakt gleiche, oder sehr ähnliche Ansätze werden von Browsern schon lange verwendet, um native Elemente wie <span class="inlinecode">&lt;video&gt;</span> zu realisieren.</p>
+                    </section>
+                    <section>
+                        <h4>Shadow DOM - Hinzufügen</h4>
+
+                        <p class="fragment">Mittels <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/attachShadow">Element.attachShadow()</a> einen Shadow DOM einhängen:</p>
+                        <pre class="fragment"><code data-trim>
+                            let shadow = elementRef.attachShadow({mode: 'open'});
+                            let shadow = elementRef.attachShadow({mode: 'closed'});
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h4>Shadow DOM - Open</h4>
+
+                        <p class="fragment">Open bedeutet das der Shadow DOM auch von Aussen zugänglich ist:</p>
+                        <pre class="fragment"><code data-trim>
+                            let myShadowDom = myCustomElem.shadowRoot;
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h4>Shadow DOM - Closed</h4>
+
+                        <p class="fragment">Closed bedeutet das der Shadow DOM von Aussen <strong>nicht</strong> zugänglich ist:</p>
+                        <pre class="fragment"><code data-trim>
+                            myCustomElem.shadowRoot === null
+                        </code></pre>
+                        <p class="fragment">So ist zum Beispiel <span class="inlinecode">&lt;video&gt;</span> umgesetzt. <span class="fragment">Wie <a href="https://blog.revillweb.com/open-vs-closed-shadow-dom-9f3d7427d1af">hier</a> demonstriert, ist das aber keine absolute Sicherheit!</span></p>
+                    </section>
+                    <section>
+                        <h4>Shadow DOM - Custom element</h4>
+
+                        <p class="fragment">Hinzufügen eines Shadow DOM zu einem Custom Element (im Konstruktor):</p>
+                        <pre class="fragment"><code data-trim>
+                            let shadow = this.attachShadow({mode: 'open'});
+                        </code></pre>
+                        <p class="fragment">Erweitern des Shadow DOM:</p>
+                        <pre class="fragment"><code data-trim>
+                            let para = document.createElement('p');
+                            shadow.appendChild(para);
+                            // etc.
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h4>Demo: Einfaches Beispiel - Popup Info</h4>
+
+                        <iframe style="width: 50%; height: 300px; background-color: white;" data-src="https://mdn.github.io/web-components-examples/popup-info-box-web-component/" data-preload></iframe>
+                    </section>
+                    <section data-external="code/shadow-dom-01-dom.html"></section>
+                    <section>
+                        <h4>Browser-Kompatibilität</h4>
+
+                        <p class="fragment">Der Shadow DOM ist in den folgenden Browsern (nativ) supported:</p>
+                        <ul class="fragment">
+                            <li>Firefox (63)</li>
+                            <li>Chrome</li>
+                            <li>Opera</li>
+                            <li>Safari</li>
+                            <li>Edge (75)</li>
+                        </ul>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Templates / Slots</h2>
+
+                        <p class="fragment">Code wiederverwenden</p>
+                        <p class="fragment">... und Komponenten und Elemente schachteln</p>
+                    </section>
+                    <section data-background-color="aquamarine" data-background-iframe="https://html.spec.whatwg.org/multipage/scripting.html#the-template-element" data-background-interactive></section>
+                    <section data-auto-animate>
+                        <h4>Templates in HTML definieren</h4>
+
+                        <p class="fragment">Bisher bereits möglich, indem z.B. ein <span class="inlinecode">&lt;div&gt;</span> mit CSS versteckt wird</p>
+                        <p class="fragment">Jetzt nativ unterstützt durch neues Element <span class="inlinecode">&lt;template&gt;</span>:</p>
+                        <pre class="fragment"><code data-trim>
+                            <template id="my-paragraph">
+                                <p>My paragraph</p>
+                            </template>
+                        </code></pre>
+                    </section>
+                    <section data-auto-animate>
+                        <h4>Templates in HTML definieren</h4>
+
+                        <p class="fragment">Dieses ist by default unsichtbar<span class="fragment">, bis man es "instanziiert":</span></p>
+                        <pre class="fragment"><code data-trim>
+                            let template = document.getElementById('my-paragraph');
+                            let templateContent = template.content;
+                            document.body.appendChild(templateContent);
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h4>Templates mit Web Components verwenden</h4>
+
+                        <p class="fragment">Templates sind schon für sich genommen praktisch<span class="fragment">, entfalten aber mit Web Components ihre ganze Kraft:</span></p>
+                        <pre class="fragment"><code data-trim>
+                            customElements.define('my-paragraph',
+                                class extends HTMLElement {
+                                    constructor() {
+                                        super();
+                                        let template = document.getElementById('my-paragraph');
+                                        let templateContent = template.content;
+
+                                        const shadowRoot = this.attachShadow({mode: 'open'})
+                                            .appendChild(templateContent.cloneNode(true));
+                                    }
+                                }
+                            );
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h4>Gekapselte Stile / CSS</h4>
+
+                        <p class="fragment">Da der Inhalt des Templates im Shadow DOM landet, können wir hier gekapseltes CSS hinzufügen:</p>
+                        <pre class="fragment"><code data-trim>
+                            <template id="my-paragraph">
+                                <style>
+                                    p {
+                                        color: white;
+                                        background-color: #666;
+                                        padding: 5px;
+                                    }
+                                </style>
+                                <p>My paragraph</p>
+                            </template>
+                        </code></pre>
+                        <p class="fragment">Eingesetzt über:</p>
+                        <pre class="fragment"><code data-trim>
+                            <my-paragraph></my-paragraph>
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h4>Flexibilität durch Slots</h4>
+
+                        <p class="fragment">Bisher ist unser Template sehr statisch!</p>
+                        <ul style="width: 50%;">
+                            <li class="fragment">Es kann nur ein Text fest hinterlegt werden</li>
+                            <li class="fragment">Der Einbindende hat keinen Einfluss auf den Inhalt</li>
+                        </ul>
+                        <p class="fragment">Slots ergänzen Templates um vordefinierte, austauschbare Bereiche</p>
+                    </section>
+                    <section data-auto-animate>
+                        <h4>Der einfachste Slot</h4>
+
+                        <p class="fragment">Der Paragraph aus unserem bisherigen <span class="inlinecode">&lt;template&gt;</span> kann zum Beispiel wie folgt erweitert werden:</p>
+                        <pre class="fragment"><code data-trim>
+                            <p>My paragraph</p>
+                        </code></pre>
+                    </section>
+                    <section data-auto-animate>
+                        <h4>Der einfachste Slot</h4>
+
+                        <p>Der Paragraph aus unserem bisherigen <span class="inlinecode">&lt;template&gt;</span> kann zum Beispiel wie folgt erweitert werden:</p>
+                        <pre><code data-trim>
+                            <p><slot name="my-text">My default text</slot></p>
+                        </code></pre>
+                        <p class="fragment">Ist der Inhalt eines Slots nicht definiert, oder das Feature im Browser nicht unterstützt, so wird der Fallback-Text angezeigt!</p>
+                    </section>
+                    <section data-auto-animate>
+                        <h4>Inhalt in einen Slot einfügen</h4>
+
+                        <p class="fragment">Um dem Slot eines Custom Elements Inhalt zu übergeben wird dieser in dieses geschachtelt, und über das neue Attribut <span class="inlinecode">slot</span> verknüpft:</p>
+                        <pre class="fragment"><code data-trim>
+                            <my-paragraph>
+                                <span slot="my-text">Let's have some different text!</span>
+                            </my-paragraph>
+                        </code></pre>
+                        <p class="fragment">oder ...</p>
+                    </section>
+                    <section data-auto-animate>
+                        <h4>Inhalt in einen Slot einfügen</h4>
+
+                        <p>Um dem Slot eines Custom Elements Inhalt zu übergeben wird dieser in dieses geschachtelt, und über das neue Attribut <span class="inlinecode">slot</span> verknüpft:</p>
+                        <pre><code data-trim>
+                            <my-paragraph>
+                                <ul slot="my-text">
+                                    <li>Let's have some different text!</li>
+                                    <li>In a list!</li>
+                                </ul>
+                            </my-paragraph>
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h4>Vokabular</h4>
+
+                        <p class="fragment">Folgende Begrifflichkeiten werden im Kontext von Templates und Slots verwendet:</p>
+                        <ul>
+                            <li class="fragment">Slotable<br><small class="fragment">Elemente die in einen Slot eingefügt werden können</small></li>
+                            <li class="fragment">slotted<br><small class="fragment">Wenn ein Element in einen Slot eingefügt wurde</small></li>
+                        </ul>
+                        <p class="fragment">Ein <span class="inlinecode">&lt;slot&gt;</span> ohne Namen bekommt alle keinem Slot zugeordneten Elemente seines Custom Elements zugeordnet!</p>
+                    </section>
+                    <section>
+                        <h4>Demo: Element Details</h4>
+
+                        <iframe style="width: 80%; height: 300px; background-color: white;" data-src="https://mdn.github.io/web-components-examples/element-details/" data-preload></iframe>
+                    </section>
+                    <section data-external="code/templates-slots-01-element-details-01.html"></section>
+                    <section data-external="code/templates-slots-02-element-details-02.html"></section>
+                    <section>
+                        <h4>Browser-Kompatibilität</h4>
+
+                        <p class="fragment">Templates sind in allen Evergreen Browsern supported!</p>
+                        <p class="fragment">... wird der Shadow DOM verwendet, ist natürlich dessen Kompatibilität zu berücksichtigen!</p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>The finer details</h2>
+                    </section>
+                    <section>
+                        <h4>Custom Elements</h4>
+                        
+                        <p><a href="https://developer.mozilla.org/en-US/docs/Web/Web_Components#Custom_elements">https://developer.mozilla.org/en-US/docs/Web/Web_Components#Custom_elements</a>
+                    </section>
+                    <section>
+                        <h4>Shadow DOM</h4>
+                        
+                        <p><a href="https://developer.mozilla.org/en-US/docs/Web/Web_Components#Shadow_DOM">https://developer.mozilla.org/en-US/docs/Web/Web_Components#Shadow_DOM</a>
+                    </section>
+                    <section>
+                        <h4>Templates / Slots</h4>
+                        
+                        <p><a href="https://developer.mozilla.org/en-US/docs/Web/Web_Components#HTML_templates">https://developer.mozilla.org/en-US/docs/Web/Web_Components#HTML_templates</a>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Nützliche Informationen</h2>
+                    </section>
+                    <section>
+                        <h4>MDN / Dokumentation</h4>
+                        
+                        <p class="fragment">Die Beispiele stammen alle aus dem MDN, dem Mozilla Developer Network.</p>
+                        <p class="fragment">Als Quelle, nicht nur zum Thema Web Components, sehr zu empfehlen!</p>
+                        <p class="fragment"><a href="https://developer.mozilla.org/en-US/">https://developer.mozilla.org/en-US/</a></p>
+                        <p class="fragment"><a href="https://developer.mozilla.org/en-US/docs/Web/Web_Components">https://developer.mozilla.org/en-US/docs/Web/Web_Components</a></p>
+                    </section>
+                    <section>
+                        <h4>Udemy Video-Kurs</h4>
+
+                        <p class="fragment">Der folgende Videokurs bei Udemy ist auch sehr zu empfehlen:</p>
+                        <p class="fragment"><a href="https://www.udemy.com/course/web-components-stenciljs-build-custom-html-elements/">https://www.udemy.com/course/web-components-stenciljs-build-custom-html-elements/</a></p>
+                        <p class="fragment">Der Kurs beinhaltet neben den Basics auch einen sehr ausführlichen Abschnitt zu Stencil!</p>
+                    </section>
+                    <section>
+                        <h4>Weitere Links</h4>
+                        
+                        <ul>
+                            <li class="fragment"><a href="https://www.webcomponents.org/">https://www.webcomponents.org/</a></li>
+                            <li class="fragment"><a href="https://reactjs.org/docs/web-components.html">https://reactjs.org/docs/web-components.html</a></li>
+                            <li class="fragment"><a href="https://angular.io/guide/elements">https://angular.io/guide/elements</a></li>
+                            <li class="fragment"><a href="https://medium.com/javascript-in-plain-english/can-you-build-web-components-with-svelte-3c8bc3c1cfd8">https://medium.com/javascript-in-plain-english/can-you-build-web-components-with-svelte-3c8bc3c1cfd8</a></li>
+                            <li class="fragment"><a href="https://medium.com/tunaiku-tech/your-first-web-component-with-vue-js-3386cffc0b1f">https://medium.com/tunaiku-tech/your-first-web-component-with-vue-js-3386cffc0b1f</a></li>
+                        </ul>
+                    </section>
+                </section>
+                <section>
+                    <h2>Frameworks</h2>
+
+                    <p class="fragment">Die folgenden Frameworks implementieren direkt Web Component-Standards, oder aber bieten die Möglichkeit Web Components zu generieren:</p>
+                    <ul>
+                        <li span class="fragment">Stencil<span class="fragment">: <a href="https://stenciljs.com/">https://stenciljs.com/</a></span></li>
+                        <li span class="fragment">Slim.js<span class="fragment">: <a href="https://github.com/slimjs/slim.js">https://github.com/slimjs/slim.js</a></span></li>
+                        <li span class="fragment">Polymer<span class="fragment">: <a href="https://www.polymer-project.org/">https://www.polymer-project.org/</a></span></li>
+                        <li span class="fragment">Snuggsi<span class="fragment">: <a href="https://github.com/devpunks/snuggsi#readme">https://github.com/devpunks/snuggsi#readme</a></span></li>
+                        <li span class="fragment">FAST<span class="fragment">: <a href="https://fast.design/">https://fast.design/</a></span></li>
+                        <li span class="fragment">Hybrids<span class="fragment">: <a href="https://github.com/hybridsjs/hybrids">https://github.com/hybridsjs/hybrids</a></span></li>
+                    </ul>
+                </section>
+                <section>
+                    <h4>Einsatzmöglichkeiten</h4>
+
+                    <ul>
+                        <li class="fragment">Isolierung von Komponenten</li>
+                        <li class="fragment">Einfacherer Einsatz von Elementen für Dritte</li>
+                        <li class="fragment">Interoperabilität</li>
+                        <li class="fragment">Ersatz von <span class="inlinecode">&lt;iFrame&gt;</span>?</li>
+                    </ul>
+                </section>
+                <section>
+                    <h1>Coding 🤓&nbsp;</h1>
+                </section>
 			</div>
 		</div>
 
@@ -33,8 +663,11 @@
 				hash: true,
 
 				// Learn about plugins: https://revealjs.com/plugins/
-				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
-			});
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ],
+                dependencies: [
+                    { src: 'plugin/external/external.js', condition: function() { return !!document.querySelector( '[data-external]' ); } }
+                ]
+            });
 		</script>
 	</body>
 </html>

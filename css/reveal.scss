@@ -1819,3 +1819,17 @@ $notesWidthPercent: 25%;
 @import 'print/pdf.scss';
 @import 'print/paper.scss';
 
+.small {
+    font-size: 18px;
+}
+
+.smaller {
+	font-size: 14px;
+}
+
+.inlinecode {
+	border: 1px solid rgba(255,255,255,.3);
+	padding: 10px;
+	font-size: 18px;
+	background-color: rgba(255,255,255,.1)
+}
